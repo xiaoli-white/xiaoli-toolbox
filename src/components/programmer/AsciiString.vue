@@ -8,7 +8,7 @@
     },
     methods: {
       ascii2string() {
-        this.str = String.fromCharCode(...this.ascii.split('').map(Number));
+        this.str = String.fromCharCode(...this.ascii.split(',').map(Number));
       },
       string2ascii() {
         this.ascii = this.str.split('').map(char => char.charCodeAt(0).toString()).join(",");
