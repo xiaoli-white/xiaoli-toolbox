@@ -38,9 +38,9 @@ export default {
   <a-button @click="genKeys">生成密钥对</a-button>
   <a-button @click="encrypt">加密</a-button>
   <a-button @click="decrypt">解密</a-button>
-  <a-input v-model:value="publicKey" prefix="公钥:"/>
-  <a-input v-model:value="privateKey" prefix="私钥:"/>
-  <a-input v-model:value="data" prefix="待加密/解密数据:"/>
+  <a-input v-model:value="publicKey" prefix="公钥:" allow-clear />
+  <a-input v-model:value="privateKey" prefix="私钥:" allow-clear />
+  <a-input v-model:value="data" prefix="待加密/解密数据:" allow-clear />
   <a-input v-model:value="output" prefix="结果:"/>
 </template>
 

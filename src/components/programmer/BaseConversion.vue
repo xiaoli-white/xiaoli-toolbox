@@ -73,7 +73,7 @@ export default {
       <a-select-option value="10">十进制(dec)</a-select-option>
       <a-select-option value="16">十六进制(hex)</a-select-option>
     </a-select>
-    <a-input v-model:value="inputValue" style="width: 70%" placeholder="请输入待转换的数字"/>
+    <a-input v-model:value="inputValue" style="width: 70%" placeholder="请输入待转换的数字" allow-clear />
   </a-input-group>
   <a-input-group compact>
     <a-select style="width: 130px" @select="setOutputMode">
