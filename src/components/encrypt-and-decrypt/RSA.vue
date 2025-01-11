@@ -11,7 +11,7 @@ export default {
     }
   },
   methods: {
-    genKeys() {
+    generateKeys() {
       const keys = forge.pki.rsa.generateKeyPair({bits: 2048});
       this.publicKey = forge.pki.publicKeyToPem(keys.publicKey);
       this.privateKey = forge.pki.privateKeyToPem(keys.privateKey);
@@ -35,7 +35,7 @@ export default {
 </script>
 
 <template>
-  <a-button @click="genKeys">生成密钥对</a-button>
+  <a-button @click="generateKeys">生成密钥对</a-button>
   <a-button @click="encrypt">加密</a-button>
   <a-button @click="decrypt">解密</a-button>
   <a-input v-model:value="publicKey" prefix="公钥:" allow-clear />
