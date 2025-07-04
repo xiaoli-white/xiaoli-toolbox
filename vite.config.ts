@@ -6,7 +6,6 @@ export default defineConfig({
   plugins: [vue()],
   build: {
     rollupOptions: {
-      // 配置多页面
       input: {
         index: './index.html',
         programmer: './programmer.html',
@@ -14,5 +13,4 @@ export default defineConfig({
       },
     },
   },
-
 })
