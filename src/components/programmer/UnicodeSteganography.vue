@@ -46,7 +46,7 @@ export default {
         }
       }
 
-      this.textWithHiddenChars = this.originalText + hiddenString + '\u200B';
+      this.textWithHiddenChars = this.originalText + hiddenString;
     },
 
     extractHiddenChars() {
@@ -89,7 +89,6 @@ export default {
         const chunk = binary.substring(i, i + 24);
         if (chunk.length === 24) {
           const codePoint = parseInt(chunk, 2);
-          // 将码点转换为UTF-16编码单元序列
           extracted += String.fromCodePoint(codePoint);
         }
       }
@@ -100,11 +99,9 @@ export default {
       navigator.clipboard.writeText(this.textWithHiddenChars)
           .then(() => {
             console.log('内容已复制到剪切板');
-            // 可以在这里添加成功提示
           })
           .catch(err => {
             console.error('复制失败:', err);
-            // 可以在这里添加错误提示
           });
     }
   }
