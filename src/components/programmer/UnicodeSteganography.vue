@@ -16,6 +16,8 @@ export default {
 
       const zeroWidthChars = ['\u200B', '\u200C', '\u200D', '\u2060'];
 
+      const lengthBinary = this.hiddenText.length.toString(2).padStart(24, '0');
+      
       let binary = '';
       for (let i = 0; i < this.hiddenText.length; i++) {
         let codePoint = this.hiddenText.codePointAt(i);
@@ -27,9 +29,11 @@ export default {
         binary += bin;
       }
 
+      const fullBinary = lengthBinary + binary;
+
       let hiddenString = '';
-      for (let i = 0; i < binary.length; i += 2) {
-        const pair = binary.substring(i, i + 2);
+      for (let i = 0; i < fullBinary.length; i += 2) {
+        const pair = fullBinary.substring(i, i + 2);
         switch (pair) {
           case '00':
             hiddenString += zeroWidthChars[0];
@@ -64,11 +68,9 @@ export default {
 
       const hiddenPart = matches[matches.length - 1];
 
-      const hiddenChars = hiddenPart.substring(0, hiddenPart.length - 1);
-
       let binary = '';
-      for (let i = 0; i < hiddenChars.length; i++) {
-        switch (hiddenChars[i]) {
+      for (let i = 0; i < hiddenPart.length; i++) {
+        switch (hiddenPart[i]) {
           case '\u200B':
             binary += '00';
             break;
@@ -84,10 +86,15 @@ export default {
         }
       }
 
+      const lengthBinary = binary.substring(0, 24);
+      const textLength = parseInt(lengthBinary, 2);
+      
+      const textBinary = binary.substring(24);
+      
       let extracted = '';
-      for (let i = 0; i < binary.length; i += 24) {
-        const chunk = binary.substring(i, i + 24);
-        if (chunk.length === 24) {
+      for (let i = 0; i < textBinary.length; i += 24) {
+        const chunk = textBinary.substring(i, i + 24);
+        if (chunk.length === 24 && extracted.length < textLength) {
           const codePoint = parseInt(chunk, 2);
           extracted += String.fromCodePoint(codePoint);
         }
