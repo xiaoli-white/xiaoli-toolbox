@@ -18,13 +18,18 @@ export default {
 
       let binary = '';
       for (let i = 0; i < this.hiddenText.length; i++) {
-        const bin = this.hiddenText.charCodeAt(i).toString(2).padStart(16, '0');
+        let codePoint = this.hiddenText.codePointAt(i);
+        if (codePoint === undefined) continue;
+        if (codePoint > 0xFFFF) {
+          i++;
+        }
+        const bin = codePoint.toString(2).padStart(24, '0');
         binary += bin;
       }
 
       let hiddenString = '';
       for (let i = 0; i < binary.length; i += 2) {
-        const pair = binary.substr(i, 2);
+        const pair = binary.substring(i, i + 2);
         switch (pair) {
           case '00':
             hiddenString += zeroWidthChars[0];
@@ -80,11 +85,12 @@ export default {
       }
 
       let extracted = '';
-      for (let i = 0; i < binary.length; i += 16) {
-        const chunk = binary.substr(i, 16);
-        if (chunk.length === 16) {
-          const charCode = parseInt(chunk, 2);
-          extracted += String.fromCharCode(charCode);
+      for (let i = 0; i < binary.length; i += 24) {
+        const chunk = binary.substring(i, i + 24);
+        if (chunk.length === 24) {
+          const codePoint = parseInt(chunk, 2);
+          // 将码点转换为UTF-16编码单元序列
+          extracted += String.fromCodePoint(codePoint);
         }
       }
 
