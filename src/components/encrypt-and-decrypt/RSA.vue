@@ -15,7 +15,7 @@ export default {
   },
   methods: {
     generateKeys() {
-      const keys = forge.pki.rsa.generateKeyPair({bits: 2048});
+      const keys = forge.pki.rsa.generateKeyPair({bits: 4096});
       this.publicKey = forge.pki.publicKeyToPem(keys.publicKey);
       this.privateKey = forge.pki.privateKeyToPem(keys.privateKey);
     },
@@ -62,8 +62,8 @@ export default {
     <a-tab-pane tab="加解密" key="1">
       <a-button @click="encrypt">加密</a-button>
       <a-button @click="decrypt">解密</a-button>
-      <a-input v-model:value="origin" prefix="原始数据:" allow-clear/>
-      <a-input v-model:value="encrypted" prefix="加密结果:"/>
+      <a-input v-model:value="origin" prefix="原文:" allow-clear/>
+      <a-input v-model:value="encrypted" prefix="密文:"/>
     </a-tab-pane>
     <a-tab-pane tab="签名/验证" key="2">
       <a-button @click="sign">签名</a-button>
