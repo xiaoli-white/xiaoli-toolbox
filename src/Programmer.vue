@@ -3,6 +3,7 @@ import Title from "./components/Title.vue";
 import BaseConversion from "./components/programmer/BaseConversion.vue";
 import AsciiString from "./components/programmer/AsciiString.vue";
 import UnicodeSteganography from "./components/programmer/UnicodeSteganography.vue";
+import Base64 from "./components/programmer/Base64.vue";
 </script>
 
 <template>
@@ -16,6 +17,9 @@ import UnicodeSteganography from "./components/programmer/UnicodeSteganography.v
     </a-tab-pane>
     <a-tab-pane key="3" tab="Unicode隐写" width="120px">
       <UnicodeSteganography/>
+    </a-tab-pane>
+    <a-tab-pane key="4" tab="Base64编解码" width="120px">
+      <Base64/>
     </a-tab-pane>
   </a-tabs>
 </template>
