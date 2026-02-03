@@ -62,15 +62,29 @@ export default {
     <a-tab-pane tab="加解密" key="1">
       <a-button @click="encrypt">加密</a-button>
       <a-button @click="decrypt">解密</a-button>
-      <a-input v-model:value="origin" prefix="原文:" allow-clear/>
-      <a-input v-model:value="encrypted" prefix="密文:"/>
+      <a-form layout="vertical">
+        <a-form-item label="原文:">
+          <a-textarea v-model:value="origin" placeholder="原文" allow-clear/>
+        </a-form-item>
+        <a-form-item label="密文:">
+          <a-input v-model:value="encrypted" placeholder="密文"/>
+        </a-form-item>
+      </a-form>
     </a-tab-pane>
     <a-tab-pane tab="签名/验证" key="2">
       <a-button @click="sign">签名</a-button>
       <a-button @click="verify">验证</a-button>
-      <a-input v-model:value="msg" prefix="原始数据:" allow-clear/>
-      <a-input v-model:value="ret" prefix="签名结果:"/>
-      <a-input v-model:value="result" prefix="验证结果:"/>
+      <a-form layout="vertical">
+        <a-form-item label="原始数据:">
+          <a-textarea v-model:value="msg" placeholder="原始数据" allow-clear/>
+        </a-form-item>
+        <a-form-item label="签名结果:">
+          <a-input v-model:value="ret" placeholder="签名结果" allow-clear/>
+        </a-form-item>
+        <a-form-item label="验证结果:">
+          <a-input v-model:value="result" placeholder="验证结果" readonly allow-clear/>
+        </a-form-item>
+      </a-form>
     </a-tab-pane>
   </a-tabs>
 </template>

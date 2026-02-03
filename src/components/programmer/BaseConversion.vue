@@ -81,7 +81,7 @@ export default {
       <a-select-option value="10">十进制(dec)</a-select-option>
       <a-select-option value="16">十六进制(hex)</a-select-option>
     </a-select>
-    <a-input v-model:value="outputValue" style="width: 70%" placeholder="转换结果"/>
+    <a-input v-model:value="outputValue" style="width: 70%" placeholder="转换结果" readonly/>
   </a-input-group>
   <a-button @click="convert">转换</a-button>
 </template>

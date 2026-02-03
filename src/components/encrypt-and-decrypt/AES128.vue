@@ -50,10 +50,20 @@ export default {
   <a-button @click="generateIV">生成IV</a-button>
   <a-button @click="encrypt">加密</a-button>
   <a-button @click="decrypt">解密</a-button>
-  <a-input v-model:value="key" prefix="Key:" allow-clear/>
-  <a-input v-model:value="iv" prefix="IV:" allow-clear/>
-  <a-input v-model:value="plaintext" prefix="原文:" allow-clear/>
-  <a-input v-model:value="ciphertext" prefix="密文:"/>
+  <a-form layout="vertical">
+    <a-form-item label="Key:">
+      <a-input v-model:value="key" placeholder="Key" allow-clear/>
+    </a-form-item>
+    <a-form-item label="IV:">
+      <a-input v-model:value="iv" placeholder="IV" allow-clear/>
+    </a-form-item>
+    <a-form-item label="原文:">
+      <a-textarea v-model:value="plaintext" placeholder="原文" allow-clear/>
+    </a-form-item>
+    <a-form-item label="密文:">
+      <a-input v-model:value="ciphertext" placeholder="密文" allow-clear/>
+    </a-form-item>
+  </a-form>
 </template>
 
 <style scoped>

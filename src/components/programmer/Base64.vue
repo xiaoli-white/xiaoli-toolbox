@@ -28,13 +28,15 @@ export default {
 <template>
   <a-button @click="encode">编码(Base64 Encode)</a-button>
   <a-button @click="decode">解码(Base64 Decode)</a-button>
-  <a-textarea v-model:value="input" placeholder="输入内容" :rows="4" allow-clear/>
-  <a-textarea v-model:value="output" placeholder="输出内容" :rows="4" allow-clear/>
+  <a-form layout="vertical">
+    <a-form-item label="输入内容:">
+      <a-textarea v-model:value="input" placeholder="输入内容" :rows="4" allow-clear/>
+    </a-form-item>
+    <a-form-item label="输出内容:">
+      <a-textarea v-model:value="output" placeholder="输出内容" :rows="4" allow-clear/>
+    </a-form-item>
+  </a-form>
 </template>
 
 <style scoped>
-  .ant-btn {
-    margin-right: 10px;
-    margin-bottom: 10px;
-  }
 </style>

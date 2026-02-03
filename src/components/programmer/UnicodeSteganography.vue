@@ -121,11 +121,11 @@ export default {
       <a-tab-pane tab="插入隐藏字符" key="1">
         <a-form layout="vertical">
           <a-form-item label="原始文本:">
-            <a-textarea v-model:value="originalText" placeholder="输入要插入隐藏字符的原始文本" :rows="3"/>
+            <a-textarea v-model:value="originalText" placeholder="输入要插入隐藏字符的原始文本" :rows="4"/>
           </a-form-item>
 
           <a-form-item label="要隐藏的文本:">
-            <a-input v-model:value="hiddenText" placeholder="输入需要隐藏的文本"/>
+            <a-textarea v-model:value="hiddenText" placeholder="输入需要隐藏的文本" :rows="4"/>
           </a-form-item>
 
           <a-form-item>
@@ -153,7 +153,7 @@ export default {
           </a-form-item>
 
           <a-form-item label="提取出的隐藏文本:">
-            <a-input v-model:value="extractedText" placeholder="提取出的隐藏文本"/>
+            <a-textarea v-model:value="extractedText" placeholder="提取出的隐藏文本" readonly :rows="4"/>
           </a-form-item>
         </a-form>
       </a-tab-pane>
