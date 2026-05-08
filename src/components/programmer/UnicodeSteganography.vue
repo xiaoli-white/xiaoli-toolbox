@@ -17,7 +17,7 @@ export default {
       const zeroWidthChars = ['\u200B', '\u200C', '\u200D', '\u2060'];
 
       const lengthBinary = this.hiddenText.length.toString(2).padStart(24, '0');
-      
+
       let binary = '';
       for (let i = 0; i < this.hiddenText.length; i++) {
         let codePoint = this.hiddenText.codePointAt(i);
@@ -31,26 +31,50 @@ export default {
 
       const fullBinary = lengthBinary + binary;
 
-      let hiddenString = '';
+      let hiddenChars = [];
       for (let i = 0; i < fullBinary.length; i += 2) {
         const pair = fullBinary.substring(i, i + 2);
         switch (pair) {
           case '00':
-            hiddenString += zeroWidthChars[0];
+            hiddenChars.push(zeroWidthChars[0]);
             break;
           case '01':
-            hiddenString += zeroWidthChars[1];
+            hiddenChars.push(zeroWidthChars[1]);
             break;
           case '10':
-            hiddenString += zeroWidthChars[2];
+            hiddenChars.push(zeroWidthChars[2]);
             break;
           case '11':
-            hiddenString += zeroWidthChars[3];
+            hiddenChars.push(zeroWidthChars[3]);
             break;
         }
       }
 
-      this.textWithHiddenChars = this.originalText + hiddenString;
+      const originalChars = Array.from(this.originalText);
+      const result = [];
+      
+      for (let i = 0; i < originalChars.length; i++) {
+        result.push(originalChars[i]);
+        
+        while (hiddenChars.length > 0) {
+          const insertCount = Math.min(
+            Math.floor(Math.random() * 4),
+            hiddenChars.length
+          );
+          
+          if (insertCount === 0 && i < originalChars.length - 1) {
+            break;
+          }
+          
+          for (let j = 0; j < insertCount; j++) {
+            result.push(hiddenChars.shift());
+          }
+          
+          if (hiddenChars.length === 0) break;
+        }
+      }
+
+      this.textWithHiddenChars = result.join('') + hiddenChars.join('');
     },
 
     extractHiddenChars() {
@@ -66,31 +90,36 @@ export default {
         return;
       }
 
-      const hiddenPart = matches[matches.length - 1];
-
       let binary = '';
-      for (let i = 0; i < hiddenPart.length; i++) {
-        switch (hiddenPart[i]) {
-          case '\u200B':
-            binary += '00';
-            break;
-          case '\u200C':
-            binary += '01';
-            break;
-          case '\u200D':
-            binary += '10';
-            break;
-          case '\u2060':
-            binary += '11';
-            break;
+      for (const match of matches) {
+        for (let i = 0; i < match.length; i++) {
+          switch (match[i]) {
+            case '\u200B':
+              binary += '00';
+              break;
+            case '\u200C':
+              binary += '01';
+              break;
+            case '\u200D':
+              binary += '10';
+              break;
+            case '\u2060':
+              binary += '11';
+              break;
+          }
         }
+      }
+
+      if (binary.length < 24) {
+        this.extractedText = "";
+        return;
       }
 
       const lengthBinary = binary.substring(0, 24);
       const textLength = parseInt(lengthBinary, 2);
-      
+
       const textBinary = binary.substring(24);
-      
+
       let extracted = '';
       for (let i = 0; i < textBinary.length; i += 24) {
         const chunk = textBinary.substring(i, i + 24);
