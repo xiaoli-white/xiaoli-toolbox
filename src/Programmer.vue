@@ -26,7 +26,8 @@ import Base64 from "./components/programmer/Base64.vue";
 
 <style scoped>
 .tabs {
-  width: 500px;
+  max-width: 500px;
+  width: 100%;
   margin: 0 auto;
 }
 </style>

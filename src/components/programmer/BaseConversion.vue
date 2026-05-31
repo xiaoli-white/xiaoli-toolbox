@@ -65,27 +65,51 @@ export default {
 </script>
 
 <template>
-  <a-input-group compact>
-    <a-select style="width: 130px" @select="setInputMode">
+  <div class="conversion-group">
+    <a-select class="mode-select" @select="setInputMode">
       <a-select-option value="2">二进制(bin)</a-select-option>
       <a-select-option value="8">八进制(oct)</a-select-option>
       <a-select-option value="10">十进制(dec)</a-select-option>
       <a-select-option value="16">十六进制(hex)</a-select-option>
     </a-select>
-    <a-input v-model:value="inputValue" style="width: 70%" placeholder="请输入待转换的数字" allow-clear />
-  </a-input-group>
-  <a-input-group compact>
-    <a-select style="width: 130px" @select="setOutputMode">
+    <a-input v-model:value="inputValue" class="value-input" placeholder="请输入待转换的数字" allow-clear />
+  </div>
+  <div class="conversion-group">
+    <a-select class="mode-select" @select="setOutputMode">
       <a-select-option value="2">二进制(bin)</a-select-option>
       <a-select-option value="8">八进制(oct)</a-select-option>
       <a-select-option value="10">十进制(dec)</a-select-option>
       <a-select-option value="16">十六进制(hex)</a-select-option>
     </a-select>
-    <a-input v-model:value="outputValue" style="width: 70%" placeholder="转换结果" readonly/>
-  </a-input-group>
+    <a-input v-model:value="outputValue" class="value-input" placeholder="转换结果" readonly/>
+  </div>
   <a-button @click="convert">转换</a-button>
 </template>
 
 <style scoped>
+.conversion-group {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
 
+.mode-select {
+  width: 130px;
+  flex-shrink: 0;
+}
+
+.value-input {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 480px) {
+  .conversion-group {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .mode-select {
+    width: 100%;
+  }
+}
 </style>
