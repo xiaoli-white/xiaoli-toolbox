@@ -16,9 +16,9 @@ export default {
         return;
       }
 
-      // Use only \u200B (ZWSP) and \u200D (ZWJ) — these survive WeChat mobile transmission.
-      // 0 -> \u200B, 1 -> \u200D
-      const ZERO = '\u200B';
+      // Use \u200C (ZWNJ) for 0 and \u200D (ZWJ) for 1.
+      // ZWSP (\u200B) is stripped by WeChat mobile, so we avoid it.
+      const ZERO = '\u200C';
       const ONE = '\u200D';
 
       const lengthBinary = this.hiddenText.length.toString(2).padStart(24, '0');
@@ -73,7 +73,7 @@ export default {
         return;
       }
 
-      const zeroWidthRegex = /[\u200B\u200D]+/g;
+      const zeroWidthRegex = /[\u200C\u200D]+/g;
       const matches = this.textWithHiddenChars.match(zeroWidthRegex);
 
       if (!matches || matches.length === 0) {
