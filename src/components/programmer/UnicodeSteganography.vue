@@ -16,7 +16,10 @@ export default {
         return;
       }
 
-      const zeroWidthChars = ['\u200B', '\u200C', '\u200D', '\u2060'];
+      // Use only \u200B (ZWSP) and \u200D (ZWJ) — these survive WeChat mobile transmission.
+      // 0 -> \u200B, 1 -> \u200D
+      const ZERO = '\u200B';
+      const ONE = '\u200D';
 
       const lengthBinary = this.hiddenText.length.toString(2).padStart(24, '0');
 
@@ -34,44 +37,30 @@ export default {
       const fullBinary = lengthBinary + binary;
 
       let hiddenChars = [];
-      for (let i = 0; i < fullBinary.length; i += 2) {
-        const pair = fullBinary.substring(i, i + 2);
-        switch (pair) {
-          case '00':
-            hiddenChars.push(zeroWidthChars[0]);
-            break;
-          case '01':
-            hiddenChars.push(zeroWidthChars[1]);
-            break;
-          case '10':
-            hiddenChars.push(zeroWidthChars[2]);
-            break;
-          case '11':
-            hiddenChars.push(zeroWidthChars[3]);
-            break;
-        }
+      for (let i = 0; i < fullBinary.length; i++) {
+        hiddenChars.push(fullBinary[i] === '1' ? ONE : ZERO);
       }
 
       const originalChars = Array.from(this.originalText);
       const result = [];
-      
+
       for (let i = 0; i < originalChars.length; i++) {
         result.push(originalChars[i]);
-        
+
         while (hiddenChars.length > 0) {
           const insertCount = Math.min(
             Math.floor(Math.random() * 4),
             hiddenChars.length
           );
-          
+
           if (insertCount === 0 && i < originalChars.length - 1) {
             break;
           }
-          
+
           for (let j = 0; j < insertCount; j++) {
             result.push(hiddenChars.shift());
           }
-          
+
           if (hiddenChars.length === 0) break;
         }
       }
@@ -84,7 +73,8 @@ export default {
         return;
       }
 
-      const zeroWidthRegex = /[\u200B\u200C\u200D\u2060]+/g;
+      // Match only the two characters used by the current encoding
+      const zeroWidthRegex = /[\u200B\u200D]+/g;
       const matches = this.textWithHiddenChars.match(zeroWidthRegex);
 
       if (!matches || matches.length === 0) {
@@ -95,20 +85,7 @@ export default {
       let binary = '';
       for (const match of matches) {
         for (let i = 0; i < match.length; i++) {
-          switch (match[i]) {
-            case '\u200B':
-              binary += '00';
-              break;
-            case '\u200C':
-              binary += '01';
-              break;
-            case '\u200D':
-              binary += '10';
-              break;
-            case '\u2060':
-              binary += '11';
-              break;
-          }
+          binary += match[i] === '\u200D' ? '1' : '0';
         }
       }
 
