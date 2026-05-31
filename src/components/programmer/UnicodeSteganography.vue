@@ -73,11 +73,11 @@ export default {
         return;
       }
 
-      // Match only the two characters used by the current encoding
       const zeroWidthRegex = /[\u200B\u200D]+/g;
       const matches = this.textWithHiddenChars.match(zeroWidthRegex);
 
       if (!matches || matches.length === 0) {
+        message.warning('未检测到隐藏字符，请确认文本包含 Unicode 隐写数据');
         this.extractedText = "";
         return;
       }
@@ -90,12 +90,19 @@ export default {
       }
 
       if (binary.length < 24) {
+        message.warning('隐藏数据不完整（二进制数据不足），可能在传输过程中丢失');
         this.extractedText = "";
         return;
       }
 
       const lengthBinary = binary.substring(0, 24);
       const textLength = parseInt(lengthBinary, 2);
+
+      if (textLength === 0) {
+        message.warning('提取失败：数据可能已损坏');
+        this.extractedText = "";
+        return;
+      }
 
       const textBinary = binary.substring(24);
 
@@ -105,7 +112,7 @@ export default {
         if (chunk.length === 24 && extracted.length < textLength) {
           const codePoint = parseInt(chunk, 2);
           if (codePoint > 0x10FFFF || isNaN(codePoint)) {
-            message.error('提取失败：数据中包含无效的 Unicode 编码');
+            message.error('提取失败：数据中包含无效的 Unicode 编码，可能在传输过程中损坏');
             this.extractedText = extracted;
             return;
           }
@@ -117,6 +124,10 @@ export default {
             return;
           }
         }
+      }
+
+      if (!extracted) {
+        message.warning('未能提取到有效文本，数据可能损坏或不完整');
       }
 
       this.extractedText = extracted;
