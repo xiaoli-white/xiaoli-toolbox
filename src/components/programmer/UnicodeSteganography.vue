@@ -127,7 +127,18 @@ export default {
         const chunk = textBinary.substring(i, i + 24);
         if (chunk.length === 24 && extracted.length < textLength) {
           const codePoint = parseInt(chunk, 2);
-          extracted += String.fromCodePoint(codePoint);
+          if (codePoint > 0x10FFFF || isNaN(codePoint)) {
+            message.error('提取失败：数据中包含无效的 Unicode 编码');
+            this.extractedText = extracted;
+            return;
+          }
+          try {
+            extracted += String.fromCodePoint(codePoint);
+          } catch {
+            message.error('提取失败：数据损坏或不支持的字符编码');
+            this.extractedText = extracted;
+            return;
+          }
         }
       }
 
