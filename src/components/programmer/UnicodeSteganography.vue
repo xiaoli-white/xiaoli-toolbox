@@ -1,4 +1,6 @@
 <script lang="ts">
+import { message } from 'ant-design-vue';
+
 export default {
   data() {
     return {
@@ -134,10 +136,10 @@ export default {
     copyToClipboard() {
       navigator.clipboard.writeText(this.textWithHiddenChars)
           .then(() => {
-            console.log('内容已复制到剪切板');
+            message.success('已复制到剪贴板');
           })
           .catch(err => {
-            console.error('复制失败:', err);
+            message.error('复制失败: ' + err.message);
           });
     }
   }

@@ -1,4 +1,5 @@
 <script lang="ts">
+import { message } from 'ant-design-vue';
 import * as CryptoJS from 'crypto-js';
 
 export default {
@@ -22,24 +23,55 @@ export default {
       this.iv = CryptoJS.lib.WordArray.create(array.slice(0, 16)).toString();
     },
     encrypt() {
-      const keyParsed = CryptoJS.enc.Utf8.parse(this.key);
-      const ivParsed = CryptoJS.enc.Utf8.parse(this.iv);
-      const ciphertext = CryptoJS.AES.encrypt(this.plaintext, keyParsed, {
-        iv: ivParsed,
-        mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7
-      });
-      this.ciphertext = ciphertext.toString();
+      if (!this.key || !this.iv) {
+        message.warning('请先填写 Key 和 IV');
+        return;
+      }
+      if (!this.plaintext) {
+        message.warning('请先填写原文');
+        return;
+      }
+      try {
+        const keyParsed = CryptoJS.enc.Utf8.parse(this.key);
+        const ivParsed = CryptoJS.enc.Utf8.parse(this.iv);
+        const ciphertext = CryptoJS.AES.encrypt(this.plaintext, keyParsed, {
+          iv: ivParsed,
+          mode: CryptoJS.mode.CBC,
+          padding: CryptoJS.pad.Pkcs7
+        });
+        this.ciphertext = ciphertext.toString();
+        message.success('加密成功');
+      } catch (err) {
+        message.error('加密失败: ' + (err as Error).message);
+      }
     },
     decrypt() {
-      const keyParsed = CryptoJS.enc.Utf8.parse(this.key);
-      const ivParsed = CryptoJS.enc.Utf8.parse(this.iv);
-      const plaintext = CryptoJS.AES.decrypt(this.ciphertext, keyParsed, {
-        iv: ivParsed,
-        mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7
-      });
-      this.plaintext = plaintext.toString(CryptoJS.enc.Utf8);
+      if (!this.key || !this.iv) {
+        message.warning('请先填写 Key 和 IV');
+        return;
+      }
+      if (!this.ciphertext) {
+        message.warning('请先填写密文');
+        return;
+      }
+      try {
+        const keyParsed = CryptoJS.enc.Utf8.parse(this.key);
+        const ivParsed = CryptoJS.enc.Utf8.parse(this.iv);
+        const plaintext = CryptoJS.AES.decrypt(this.ciphertext, keyParsed, {
+          iv: ivParsed,
+          mode: CryptoJS.mode.CBC,
+          padding: CryptoJS.pad.Pkcs7
+        });
+        const result = plaintext.toString(CryptoJS.enc.Utf8);
+        if (!result) {
+          message.error('解密失败，请检查密钥和密文是否正确');
+          return;
+        }
+        this.plaintext = result;
+        message.success('解密成功');
+      } catch (err) {
+        message.error('解密失败: ' + (err as Error).message);
+      }
     }
   }
 }

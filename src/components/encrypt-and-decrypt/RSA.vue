@@ -1,4 +1,5 @@
 <script lang="ts">
+import { message } from 'ant-design-vue';
 import * as forge from 'node-forge';
 
 export default {
@@ -20,35 +21,96 @@ export default {
       this.privateKey = forge.pki.privateKeyToPem(keys.privateKey);
     },
     encrypt() {
-      this.encrypted = "";
-      const publicKey = forge.pki.publicKeyFromPem(this.publicKey);
-      const plaintextBytes = forge.util.encodeUtf8(this.origin);
+      if (!this.publicKey) {
+        message.warning('请先填写公钥');
+        return;
+      }
+      if (!this.origin) {
+        message.warning('请先填写原文');
+        return;
+      }
+      try {
+        this.encrypted = "";
+        const publicKey = forge.pki.publicKeyFromPem(this.publicKey);
+        const plaintextBytes = forge.util.encodeUtf8(this.origin);
 
-      const encryptedBytes = publicKey.encrypt(plaintextBytes, 'RSA-OAEP');
-      this.encrypted = forge.util.encode64(encryptedBytes);
+        const encryptedBytes = publicKey.encrypt(plaintextBytes, 'RSA-OAEP');
+        this.encrypted = forge.util.encode64(encryptedBytes);
+        message.success('加密成功');
+      } catch (err) {
+        message.error('加密失败: ' + (err as Error).message);
+      }
     },
     decrypt() {
-      this.origin = "";
-      const privateKey = forge.pki.privateKeyFromPem(this.privateKey);
-      const ctBytes = forge.util.decode64(this.encrypted);
+      if (!this.privateKey) {
+        message.warning('请先填写私钥');
+        return;
+      }
+      if (!this.encrypted) {
+        message.warning('请先填写密文');
+        return;
+      }
+      try {
+        this.origin = "";
+        const privateKey = forge.pki.privateKeyFromPem(this.privateKey);
+        const ctBytes = forge.util.decode64(this.encrypted);
 
-      const plaintextBytes = privateKey.decrypt(ctBytes, 'RSA-OAEP');
-      this.origin = forge.util.decodeUtf8(plaintextBytes);
+        const plaintextBytes = privateKey.decrypt(ctBytes, 'RSA-OAEP');
+        this.origin = forge.util.decodeUtf8(plaintextBytes);
+        message.success('解密成功');
+      } catch (err) {
+        message.error('解密失败: ' + (err as Error).message);
+      }
     },
     sign() {
-      this.ret = "";
-      const privateKey = forge.pki.privateKeyFromPem(this.privateKey);
-      const md = forge.md.sha256.create();
-      md.update(this.msg, 'utf8');
-      this.ret = forge.util.encode64(privateKey.sign(md));
+      if (!this.privateKey) {
+        message.warning('请先填写私钥');
+        return;
+      }
+      if (!this.msg) {
+        message.warning('请先填写原始数据');
+        return;
+      }
+      try {
+        this.ret = "";
+        const privateKey = forge.pki.privateKeyFromPem(this.privateKey);
+        const md = forge.md.sha256.create();
+        md.update(this.msg, 'utf8');
+        this.ret = forge.util.encode64(privateKey.sign(md));
+        message.success('签名成功');
+      } catch (err) {
+        message.error('签名失败: ' + (err as Error).message);
+      }
     },
     verify() {
-      this.result = "";
-      const publicKey = forge.pki.publicKeyFromPem(this.publicKey);
-      const md = forge.md.sha256.create();
-      md.update(this.msg, 'utf8');
-      const signatureBytes = forge.util.decode64(this.ret);
-      this.result = publicKey.verify(md.digest().bytes(), signatureBytes) ? "Success" : "Failed";
+      if (!this.publicKey) {
+        message.warning('请先填写公钥');
+        return;
+      }
+      if (!this.msg) {
+        message.warning('请先填写原始数据');
+        return;
+      }
+      if (!this.ret) {
+        message.warning('请先填写签名结果');
+        return;
+      }
+      try {
+        this.result = "";
+        const publicKey = forge.pki.publicKeyFromPem(this.publicKey);
+        const md = forge.md.sha256.create();
+        md.update(this.msg, 'utf8');
+        const signatureBytes = forge.util.decode64(this.ret);
+        const isValid = publicKey.verify(md.digest().bytes(), signatureBytes);
+        this.result = isValid ? "Success" : "Failed";
+        if (isValid) {
+          message.success('验证成功：签名有效');
+        } else {
+          message.error('验证失败：签名无效');
+        }
+      } catch (err) {
+        message.error('验证失败: ' + (err as Error).message);
+      }
     },
   },
 }
