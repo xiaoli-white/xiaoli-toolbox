@@ -11,16 +11,22 @@ export default {
       ciphertext: ""
     }
   },
+  mounted() {
+    this.key = localStorage.getItem('aes_key') || "";
+    this.iv = localStorage.getItem('aes_iv') || "";
+  },
   methods: {
     generateKey() {
       const array = new Uint8Array(16);
       window.crypto.getRandomValues(array);
       this.key = CryptoJS.lib.WordArray.create(array.slice(0, 16)).toString();
+      localStorage.setItem('aes_key', this.key);
     },
     generateIV() {
       const array = new Uint8Array(16);
       window.crypto.getRandomValues(array);
       this.iv = CryptoJS.lib.WordArray.create(array.slice(0, 16)).toString();
+      localStorage.setItem('aes_iv', this.iv);
     },
     encrypt() {
       if (!this.key || !this.iv) {

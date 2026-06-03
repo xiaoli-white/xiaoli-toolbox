@@ -14,11 +14,17 @@ export default {
       result: ""
     }
   },
+  mounted() {
+    this.publicKey = localStorage.getItem('rsa_public_key') || "";
+    this.privateKey = localStorage.getItem('rsa_private_key') || "";
+  },
   methods: {
     generateKeys() {
       const keys = forge.pki.rsa.generateKeyPair({bits: 4096});
       this.publicKey = forge.pki.publicKeyToPem(keys.publicKey);
       this.privateKey = forge.pki.privateKeyToPem(keys.privateKey);
+      localStorage.setItem('rsa_public_key', this.publicKey);
+      localStorage.setItem('rsa_private_key', this.privateKey);
     },
     encrypt() {
       if (!this.publicKey) {
