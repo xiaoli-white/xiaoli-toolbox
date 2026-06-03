@@ -1,14 +1,18 @@
 <script setup lang="ts">
+import { ref, watch } from 'vue'
 import Title from "./components/Title.vue";
 import BaseConversion from "./components/programmer/BaseConversion.vue";
 import AsciiString from "./components/programmer/AsciiString.vue";
 import UnicodeSteganography from "./components/programmer/UnicodeSteganography.vue";
 import Base64 from "./components/programmer/Base64.vue";
+
+const activeKey = ref(localStorage.getItem('programmer_tab_key') || "1");
+watch(activeKey, (val) => localStorage.setItem('programmer_tab_key', val));
 </script>
 
 <template>
   <Title/>
-  <a-tabs class="tabs" centered>
+  <a-tabs v-model:activeKey="activeKey" class="tabs" centered>
     <a-tab-pane key="1" tab="进制转换" width="120px">
       <BaseConversion/>
     </a-tab-pane>
